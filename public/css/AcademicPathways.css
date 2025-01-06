@@ -1285,3 +1285,119 @@ section:nth-child(even) {
     color: #007bff;
     font-family: 'HSSanTokki20-Regular', sans-serif;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 1200px) {
+    body {
+        font-size: 3vw;
+    }
+    button {
+        font-size: 1.5em;
+        padding: 1.5vh 4vw;
+    }
+    header .logo {
+        font-size: 4vw;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 4vw;
+    }
+    button {
+        font-size: 1.2em;
+        padding: 1vh 3vw;
+    }
+    header .logo {
+        font-size: 5vw;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 5vw;
+    }
+    button {
+        font-size: 1em;
+        padding: 1vh 2vw;
+    }
+    header .logo {
+        font-size: 6vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-security, .info-security1, .info-security2, .info-security3 {
+        font-size: 18px;
+        padding: 20px;
+    }
+
+    .info-security .title,
+    .info-security1 .title,
+    .info-security2 .title,
+    .info-security3 .title {
+        font-size: 24px;
+    }
+
+    .info-security .highlight,
+    .info-security1 .highlight,
+    .info-security2 .highlight,
+    .info-security3 .highlight {
+        font-size: 22px;
+    }
+
+    .footer {
+        font-size: 1.8vw;
+    }
+
+    .footer-logo p {
+        font-size: 1.5vw;
+    }
+
+    .footer-logo span {
+        font-size: 1.3vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-security, .info-security1, .info-security2, .info-security3 {
+        font-size: 2.5vw;
+        padding: 2vw;
+    }
+
+    .info-security .title,
+    .info-security1 .title,
+    .info-security2 .title,
+    .info-security3 .title {
+        font-size: 3.5vw;
+    }
+
+    .info-security .highlight,
+    .info-security1 .highlight,
+    .info-security2 .highlight,
+    .info-security3 .highlight {
+        font-size: 3vw;
+    }
+
+    .footer {
+        font-size: 3vw;
+    }
+
+    .footer-logo p {
+        font-size: 2vw;
+    }
+
+    .footer-logo span {
+        font-size: 1.8vw;
+    }
+}
