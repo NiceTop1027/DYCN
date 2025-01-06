@@ -630,3 +630,115 @@ body {
     color: #007bff;
     font-family: 'HSSanTokki20-Regular', sans-serif;
 }
+
+
+
+
+
+
+
+
+@media (max-width: 1200px) {
+    body {
+        font-size: 3vw;
+    }
+    header {
+        font-size: 4vw;
+    }
+    button {
+        font-size: 1.5em;
+        padding: 1.5vh 4vw;
+    }
+    .logo {
+        width: 60px;
+        height: 60px;
+    }
+    .community-h2_kim {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 4vw;
+    }
+    header {
+        font-size: 5vw;
+    }
+    button {
+        font-size: 1.2em;
+        padding: 1vh 3vw;
+    }
+    .logo {
+        width: 50px;
+        height: 50px;
+    }
+    .community-h2_kim {
+        font-size: 4vw;
+    }
+    .search-bar_kim input {
+        width: 80%;
+        font-size: 3.5vw;
+    }
+    .table_kim th,
+    .table_kim td {
+        font-size: 3.5vw;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 5vw;
+    }
+    header {
+        font-size: 6vw;
+    }
+    button {
+        font-size: 1em;
+        padding: 1vh 2vw;
+    }
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+    .community-h2_kim {
+        font-size: 5vw;
+    }
+    .search-bar_kim input {
+        width: 100%;
+        font-size: 5vw;
+    }
+    .table_kim th,
+    .table_kim td {
+        font-size: 5vw;
+    }
+    .pagination_kim {
+        font-size: 5vw;
+    }
+}
+
+@media (max-width: 1024px) {
+    .btn-group_kim button {
+        font-size: 2.5vw;
+        padding: 2vh 4vw;
+    }
+    .search-bar_kim input {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-content_kim {
+        width: 80%;
+        padding: 5vw;
+    }
+    .footer-content {
+        font-size: 3.5vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-content {
+        font-size: 5vw;
+    }
+}
