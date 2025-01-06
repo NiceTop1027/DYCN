@@ -294,7 +294,7 @@
         });
 
 
-        let posts = JSON.parse(localStorage.getItem("posts")) || []; // 로컬스토리지에서 게시물 불러오기
+        let posts = JSON.parse(localStorage.getItem("posts")) || [];  // 로컬스토리지에서 게시물 불러오기
         let currentPage = 1;
         const postsPerPage = 10;
         let currentPostId = null; // 삭제할 게시물 ID 저장
@@ -351,37 +351,29 @@
                 postTable.appendChild(row);
             });
 
-            // 관리자 여부 체크 후 삭제 버튼 보이기
-            checkAdmin();
-
+            checkAdmin();  // 관리자 여부 체크 후 삭제 버튼 보이기
             updatePagination(Math.ceil(posts.length / postsPerPage));
         }
 
-        // 게시물 조회수 증가 함수
+        // 게시물 조회수 증가
         function incrementView(postId) {
             const post = posts.find(p => p.id === postId);
             if (post) {
                 post.views += 1;
-                savePosts(); // 로컬스토리지에 저장
+                savePosts();
             }
         }
 
-        // 게시물 모달 열기 (조회수 증가 및 댓글 로딩)
+        // 게시물 모달 열기
         function openModal(index) {
             const post = posts[index];
-            currentPostId = index; // 현재 게시물의 ID 저장
-
+            currentPostId = index; // 현재 게시물 ID 저장
             document.getElementById("modalTitle").innerText = post.title;
             document.getElementById("modalAuthor").innerText = `작성자: ${post.author}`;
             document.getElementById("modalDate").innerText = `작성일: ${post.date}`;
             document.getElementById("modalContent").innerText = post.content;
 
-            // 조회수 증가
             incrementView(post.id);
-
-            // 댓글을 해당 게시물에서 불러오기
-            renderComments(post.id);
-
             document.getElementById("myModal").style.display = "block";
         }
 
@@ -408,10 +400,7 @@
                 timestamp: Date.now()
             };
 
-            // 현재 게시물 ID 가져오기
             const postId = posts[currentPostId].id;
-
-            // 댓글을 게시물 객체에 추가
             const post = posts.find(p => p.id === postId);
             if (post) {
                 post.comments.push(comment);
@@ -419,8 +408,7 @@
                 renderComments(postId); // 댓글 갱신
             }
 
-            // 댓글 입력창 비우기
-            document.getElementById("commentInput").value = '';
+            document.getElementById("commentInput").value = '';  // 댓글 입력창 비우기
         }
 
         // 댓글을 게시물 모달에 표시하는 함수
@@ -428,19 +416,17 @@
             const commentsList = document.getElementById("commentsList");
             commentsList.innerHTML = ''; // 기존 댓글 삭제
 
-            const post = posts.find(p => p.id === postId); // 현재 게시물 찾기
-
+            const post = posts.find(p => p.id === postId);
             if (post && post.comments) {
                 post.comments.forEach((comment, index) => {
                     const commentElement = document.createElement("div");
                     commentElement.classList.add("comment-item");
                     commentElement.innerHTML = `
-                        <p><strong>${comment.userId}</strong></p> <!-- 이메일 대신 ID로 변경 -->
+                        <p><strong>${comment.userId}</strong></p>
                         <p>${comment.content}</p>
                         <p><small>${new Date(comment.timestamp).toLocaleString()}</small></p>
                     `;
 
-                    // 관리자인 경우 삭제 버튼 보이기
                     const deleteButton = document.createElement("button");
                     deleteButton.innerText = "삭제";
                     deleteButton.classList.add("deleteCommentButton");
@@ -461,29 +447,16 @@
                 savePosts(); // 로컬스토리지에 새로 저장
                 renderComments(postId); // 댓글 갱신
             }
-
-            // Firebase에서 댓글 삭제
-            const commentId = Object.keys(post.comments)[commentIndex]; // 댓글 ID 가져오기
-            const commentRef = ref(database, `posts/${postId}/comments/${commentId}`);
-            remove(commentRef)
-                .then(() => {
-                    console.log("댓글 삭제 성공");
-                })
-                .catch((error) => {
-                    console.error("댓글 삭제 실패:", error);
-                    alert("댓글 삭제에 실패했습니다.");
-                });
         }
 
         // 게시물 삭제 확인 모달
         function confirmDelete(index) {
-            currentPostId = index; // 삭제할 게시물 ID 저장
-            document.getElementById("deleteModal").style.display = "block"; // 삭제 모달 열기
+            currentPostId = index;
+            document.getElementById("deleteModal").style.display = "block";  // 삭제 모달 열기
         }
 
         // 게시물 삭제
         function deletePost() {
-            // posts 배열에서 삭제할 게시물 삭제
             posts.splice(currentPostId, 1);
             savePosts(); // 로컬스토리지에 새로 저장
             closeDeleteModal(); // 삭제 모달 닫기
@@ -492,22 +465,22 @@
 
         // 삭제 모달 닫기
         function closeDeleteModal() {
-            document.getElementById("deleteModal").style.display = "none"; // 모달 닫기
+            document.getElementById("deleteModal").style.display = "none";
         }
 
         // 게시물 모달 닫기
         function closeModal() {
-            document.getElementById("myModal").style.display = "none"; // 게시물 모달 닫기
+            document.getElementById("myModal").style.display = "none";  // 게시물 모달 닫기
         }
 
         // 게시물 작성 모달 열기
         function openPostForm() {
-            document.getElementById("postModal").style.display = "block"; // 게시물 작성 모달 열기
+            document.getElementById("postModal").style.display = "block";  // 게시물 작성 모달 열기
         }
 
         // 게시물 작성 모달 닫기
         function closePostModal() {
-            document.getElementById("postModal").style.display = "none"; // 게시물 작성 모달 닫기
+            document.getElementById("postModal").style.display = "none";  // 게시물 작성 모달 닫기
         }
 
         // 게시물 작성하기
@@ -536,10 +509,10 @@
             };
 
             posts.push(newPost);
-            savePosts(); // 게시물 저장
+            savePosts();  // 게시물 저장
             document.getElementById("postForm").reset();
-            closePostModal(); // 모달 닫기
-            showAllPosts(); // 새로 작성된 게시물 보여주기
+            closePostModal();  // 모달 닫기
+            showAllPosts();  // 새로 작성된 게시물 보여주기
         }
 
         // 페이지 변경
@@ -565,9 +538,9 @@
             }
 
             document.getElementById("prevPage").style.display = currentPage === 1 ? "none" : "inline";
-            document.getElementById("nextPage").style.display =
-                currentPage === totalPages ? "none" : "inline";
+            document.getElementById("nextPage").style.display = currentPage === totalPages ? "none" : "inline";
         }
+
 
 
 
