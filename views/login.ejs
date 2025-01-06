@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYCNㅣ로그인</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="icon" href="https://i.ibb.co/LR54XD7/DYCNFALOGO-1.png" type="image/png">
+</head>
+
+<body>
+
+    
+
+    <div class="core-background">
+        <div class="core"></div>
+    </div>
+
+    <div class="container">
+        <h1>로그인</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">이메일</label>
+                <input type="email" id="loginEmail" placeholder="이메일을 입력하세요." required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">비밀번호</label>
+                <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요." required>
+            </div>
+            <button type="button" id="loginButton" class="btn">로그인</button>
+        </form>
+        <div id="errorMessage"></div>
+
+        <!-- 회원가입 버튼 추가 -->
+        <div style="margin-top: 20px; text-align: center;">
+            <p>계정이 없으신가요?</p>
+            <button type="button" id="signupButton" class="btn">회원가입</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import {
+            getAuth,
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import {
+            getDatabase,
+            ref,
+            get
+        } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC171bQl5b7vGw-FMn8CrsKNeQHmvXlfGk",
+            authDomain: "ntwebsite-5ed7a.firebaseapp.com",
+            projectId: "ntwebsite-5ed7a",
+            storageBucket: "ntwebsite-5ed7a.appspot.com",
+            messagingSenderId: "31466271249",
+            appId: "1:31466271249:web:77892adc5cd70ea760b7b0",
+            measurementId: "G-R6FXL4TZBD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        document.getElementById("loginButton").addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value.trim();
+            const errorMessage = document.getElementById("errorMessage");
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                const dbRef = ref(database, `users/${user.uid}`);
+                const snapshot = await get(dbRef);
+
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+
+                    // 로그인 성공 시 localStorage에 사용자 정보 저장
+                    localStorage.setItem("userId", userData.id);
+                    localStorage.setItem("userEmail", userData.email);
+                    localStorage.setItem("userRole", userData.role);
+
+                    alert("로그인 성공!");
+                    errorMessage.style.display = "none";
+
+                    // 사용자 역할에 따라 이동할 페이지를 동적으로 결정
+                    if (userData.role === "admin") {
+                        window.location.href = "/main";
+                    } else {
+                        window.location.href = "/main";
+                    }
+                } else {
+                    throw new Error("사용자 정보를 찾을 수 없습니다.");
+                }
+            } catch (error) {
+                console.error("로그인 실패:", error);
+                errorMessage.style.display = "block";
+                errorMessage.textContent =
+                    error.code === "auth/user-not-found" ?
+                    "등록되지 않은 이메일입니다." :
+                    error.code === "auth/wrong-password" ?
+                    "비밀번호가 틀렸습니다." :
+                    `로그인 실패: ${error.message}`;
+            }
+        });
+
+        // 회원가입 버튼 클릭 이벤트
+        document.getElementById("signupButton").addEventListener("click", () => {
+            window.location.href = "/signup";
+        });
+    </script>
+
+</body>
+
+</html>

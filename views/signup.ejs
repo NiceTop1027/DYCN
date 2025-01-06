@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYCNㅣ회원가입</title>
+    <link rel="stylesheet" href="/css/signup.css"> <!-- 정적 파일을 제공하는 경우 경로 설정 -->
+    <link rel="icon" href="https://i.ibb.co/LR54XD7/DYCNFALOGO-1.png" type="image/png">
+</head>
+
+<body>
+    <div class="core-background">
+        <div class="core"></div>
+    </div>
+    <div class="container">
+        <h1>회원가입</h1>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="signUpId">아이디</label>
+                <input type="text" id="signUpId" placeholder="아이디 입력" required>
+            </div>
+            <div class="form-group">
+                <label for="signUpEmail">이메일</label>
+                <input type="email" id="signUpEmail" placeholder="이메일 입력" required>
+            </div>
+            <div class="form-group">
+                <label for="signUpPassword">비밀번호</label>
+                <input type="password" id="signUpPassword" placeholder="비밀번호 입력" required>
+            </div>
+            <button type="button" id="signUpButton" class="btn">회원가입</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import {
+            getDatabase,
+            ref,
+            set
+        } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC171bQl5b7vGw-FMn8CrsKNeQHmvXlfGk",
+            authDomain: "ntwebsite-5ed7a.firebaseapp.com",
+            projectId: "ntwebsite-5ed7a",
+            storageBucket: "ntwebsite-5ed7a.appspot.com",
+            messagingSenderId: "31466271249",
+            appId: "1:31466271249:web:77892adc5cd70ea760b7b0",
+            measurementId: "G-R6FXL4TZBD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        document.getElementById("signUpButton").addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            const id = document.getElementById("signUpId").value.trim();
+            const email = document.getElementById("signUpEmail").value.trim();
+            const password = document.getElementById("signUpPassword").value.trim();
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Firebase Realtime Database에 사용자 정보 저장
+                await set(ref(database, `users/${user.uid}`), {
+                    id: id,
+                    email: email,
+                    role: "user" // 기본 역할은 일반 사용자
+                });
+
+                alert("회원가입 성공! 로그인 화면으로 이동합니다.");
+                window.location.href = "/login"; // 회원가입 성공 시 로그인 페이지로 이동
+            } catch (error) {
+                console.error("회원가입 실패:", error);
+                alert(`회원가입 실패: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYCNㅣ커뮤니티</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="css/community.css">
+    <link rel="icon" href="https://i.ibb.co/LR54XD7/DYCNFALOGO-1.png" type="image/png">
+</head>
+
+<body>
+    <header>
+        DYCNㅣ커뮤니티
+    </header>
+
+    <div class="core-background">
+        <div class="core"></div>
+    </div>
+
+    <div class="horizontal-wrapper">
+        <div class="logo-container">
+            <img src="https://i.ibb.co/fnhtkjy/DYCN.png" alt="DYCN 로고" class="logo">
+            <span class="logo-text">DYCNㅣDukYoung New Core</span>
+        </div>
+        <ul class="horizontalMenu" id="navBar"></ul>
+        </ul>
+    </div>
+    <div class="container_kim">
+        <h2 class="community-h2_kim">DYCN Community</h2>
+        <div class="btn-group_kim">
+            <button onclick="showAllPosts()">전체 글</button>
+            <button onclick="showPopularPosts()">인기 글</button>
+            <button onclick="showNoticePosts()">공지</button>
+            <button onclick="openPostForm()">게시글 작성</button>
+        </div>
+        <div class="search-bar_kim">
+            <input type="text" id="searchInput" placeholder="게시물 검색" oninput="searchPosts()">
+        </div>
+        <table class="table_kim">
+            <thead>
+                <tr>
+                    <th>말머리</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>조회수</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody id="postTable">
+
+            </tbody>
+        </table>
+        <div class="pagination_kim">
+            <a href="#" id="prevPage" onclick="changePage(-1)">&lt;</a>
+            <span id="pageNumbers"></span>
+            <a href="#" id="nextPage" onclick="changePage(1)">&gt;</a>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal_kim">
+        <div class="modal-content_kim">
+            <span class="close_kim" onclick="closeDeleteModal()">&times;</span>
+            <h3>정말로 이 게시물을 삭제하시겠습니까?</h3>
+            <button id="confirmDeleteButton" class="button_kim" onclick="deletePost()">삭제</button>
+            <button class="button_kim" onclick="closeDeleteModal()">취소</button>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal_kim">
+        <div class="modal-content_kim">
+            <span class="close_kim" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalAuthor"></p>
+            <p id="modalDate"></p>
+            <p id="modalContent"></p>
+    
+            <!-- 댓글 입력 UI -->
+            <div class="comments-section_kim">
+                <h4>댓글</h4>
+                <textarea id="commentInput" class="textarea_kim" placeholder="댓글을 작성하세요..." rows="4"></textarea>
+                <button onclick="submitComment()" class="button_kim">댓글 작성</button>
+    
+                <div id="commentsList"></div> <!-- 댓글 리스트 표시 -->
+            </div>
+        </div>
+    </div>
+
+
+    <div id="postModal" class="modal_kim">
+        <div class="modal-content_kim">
+            <span class="close_kim" onclick="closePostModal()">&times;</span>
+            <h3 class="modal-title_kim">게시글 작성</h3>
+            <form id="postForm" class="form_kim">
+                <div class="input-group_kim">
+                    <label class="input-label_kim" for="category">말머리:</label>
+                    <select id="category" name="category" class="select_kim" required>
+                        <option value="공지">공지</option>
+                        <option value="일반">일반</option>
+                    </select>
+                </div>
+                <div class="input-group_kim">
+                    <label class="input-label_kim" for="title">제목:</label>
+                    <input type="text" id="title" name="title" class="input-text_kim" required>
+                </div>
+                <div class="input-group_kim">
+                    <label class="input-label_kim" for="author">작성자:</label>
+                    <input type="text" id="author" name="author" class="input-text_kim" required>
+                </div>
+                <div class="input-group_kim">
+                    <label class="input-label_kim" for="content">내용:</label>
+                    <textarea id="content" name="content" class="textarea_kim" rows="4" required></textarea>
+                </div>
+                <button type="button" class="button_kim" onclick="submitPost()">작성</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="https://i.ibb.co/fnhtkjy/DYCN.png" alt="" class="logo-image">
+                <p>DYCN<br><span>DukYoung New Core</span></p>
+            </div>
+            <div class="footer-address">
+                <p>경기도 용인시 처인구 고림로74번길 15 (덕영고등학교)</p>
+                <p>Tel. 010-4795-3077 (예비 전화번호) | Mail. mistarcodm@gmail.com </p>
+            </div>
+            <div class="footer-links">
+                <a href="https://dukyoung-h.goeyi.kr/dukyoung-h/main.do">덕영고등학교 홈페이지</a> |
+                <a href="/TermsofUse">이용약관</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Copyright © 2025 DukYoung New Core. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const footer = document.querySelector(".footer");
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            footer.classList.add("visible");
+                        }
+                    });
+                }, {
+                    threshold: 0.2
+                }
+            );
+
+            observer.observe(footer);
+        });
+
+        function openInquiryModal() {
+            const inquiryModal = document.getElementById("inquiryModal");
+            inquiryModal.style.display = "block";
+        }
+
+        function closeInquiryModal() {
+            const inquiryModal = document.getElementById("inquiryModal");
+            inquiryModal.style.display = "none";
+        }
+
+
+
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const footer = document.querySelector(".footer");
+
+            // Footer Intersection Observer
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            footer.classList.add("visible");
+                        }
+                    });
+                }, {
+                    threshold: 0.2
+                }
+            );
+
+            observer.observe(footer);
+
+            const userRole = localStorage.getItem("userRole");
+            const userId = localStorage.getItem("userId");
+
+            // 말머리 제한: 관리자와 일반 사용자 구분
+            const categorySelect = document.getElementById("category");
+            if (userRole === "admin") {
+                categorySelect.innerHTML = `
+            <option value="공지">공지</option>
+            <option value="일반">일반</option>
+            <option value="질문">질문</option>
+        `;
+            } else {
+                categorySelect.innerHTML = `
+            <option value="일반">일반</option>
+            <option value="질문">질문</option>
+        `;
+            }
+
+            // 작성자 필드에 로그인 ID 자동 설정
+            const authorInput = document.getElementById("author");
+            authorInput.value = userId || "알 수 없음";
+            authorInput.readOnly = true;
+
+            if (!userId || !localStorage.getItem("userEmail")) {
+                alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+                window.location.href = "/login";
+            } else {
+                const navBar = document.getElementById("navBar");
+
+                navBar.innerHTML = `
+                <li class="item" id="login"><a href="/main" class="btn"><i class="fas fa-home"></i> 홈</a></li>
+            <li class="item" id="account">
+                <a href="#account" class="btn"><i class="fas fa-user-circle"></i> DYCN소개</a>
+                <div class="subMenu">
+                    <a href="/lntroduction">인사말</a>
+                    <a href="/lntroduction">DYCN</a>
+                    <a href="/lntroduction">목표</a>
+                    <a href="/lntroduction">멤버</a>
+                </div>
+            </li>
+            <li class="item" id="about">
+                <a href="#about" class="btn"><i class="fas fa-address-card"></i> 진학정보</a>
+                <div class="subMenu">
+                    <a href="/academic-pathways">대학</a>
+                    <a href="/academic-pathways">학과</a>
+                    <a href="/academic-pathways">직업</a>
+                </div>
+            </li>
+            <li class="item" id="support">
+                <a href="#support" class="btn"><i class="fas fa-info"></i> 워게임</a>
+                <div class="subMenu">
+                        <a href="https://ctfd-hosting.onrender.com" target="_blank">(개인제작) 덕영고등학교 CTF</a>
+                        <a href="https://codeup.kr/" target="_blank">(CodeUp) 코드업 </a>
+                        <a href="https://dreamhack.io/" target="_blank">(DreamHack) 드림핵</a>
+                </div>
+            </li>
+            <li class="item" id="services">
+                <a href="#services" class="btn"><i class="fas fa-cogs"></i> 커뮤니티</a>
+                <div class="subMenu">
+                    <a href="/community" onclick="showAllPosts()">게시글</a>
+                </div>
+            </li>
+            <li class="item" style="display: flex; align-items: center; gap: 10px;">
+                <span style="
+                    color: #007bff;
+                    font-weight: bold;
+                    font-size: 1rem;
+                    padding: 5px 10px;
+                    border: 1px solid #007bff;
+                    border-radius: 5px;
+                    background-color: #f0f8ff;
+                ">${userId}</span>
+                <button id="logoutButton" class="btn" style="
+                    margin: 0px 0px 0px 0px;
+                    color: white;
+                    background-color: #007bff;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 5px 10px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">로그아웃</button>
+            </li>
+        `;
+
+                document.getElementById("logoutButton").addEventListener("click", () => {
+                    localStorage.removeItem("userId");
+                    localStorage.removeItem("userEmail");
+                    localStorage.removeItem("userRole");
+                    alert("로그아웃 되었습니다.");
+                    window.location.href = "/community";
+                });
+            }
+        });
+
+
+        let posts = JSON.parse(localStorage.getItem("posts")) || []; // 로컬스토리지에서 게시물 불러오기
+        let currentPage = 1;
+        const postsPerPage = 10;
+        let currentPostId = null; // 삭제할 게시물 ID 저장
+
+        // 게시물 저장
+        function savePosts() {
+            localStorage.setItem("posts", JSON.stringify(posts)); // 로컬스토리지에 게시물 저장
+        }
+
+        // 페이지 로드 시 로컬스토리지에서 데이터를 불러옴
+        document.addEventListener("DOMContentLoaded", () => {
+            posts = JSON.parse(localStorage.getItem("posts")) || [];
+            showAllPosts(); // 페이지가 로드될 때 게시물 보여주기
+        });
+
+        // 관리자만 삭제 버튼 보이기
+        function checkAdmin() {
+            const userRole = localStorage.getItem("userRole");
+            const deleteButtons = document.querySelectorAll('.deleteButton');
+            deleteButtons.forEach(button => {
+                if (userRole === 'admin') {
+                    button.style.display = 'inline-block'; // 관리자만 삭제 버튼을 보이게 함
+                } else {
+                    button.style.display = 'none'; // 일반 사용자는 삭제 버튼을 숨김
+                }
+            });
+        }
+
+        // 전체 게시물 보여주기
+        function showAllPosts() {
+            currentPage = 1;
+            renderPosts();
+        }
+
+        // 게시물 렌더링
+        function renderPosts() {
+            const postTable = document.getElementById("postTable");
+            postTable.innerHTML = "";
+
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const currentPosts = posts.slice(startIndex, endIndex);
+
+            currentPosts.forEach((post, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${post.category}</td>
+                    <td><a href="#" onclick="openModal(${index})">${post.title}</a></td>
+                    <td>${post.author}</td>
+                    <td>${post.date}</td>
+                    <td>${post.views}</td>
+                    <td><button class="deleteButton" onclick="confirmDelete(${index})" style="display:none;">삭제</button></td>
+                `;
+                postTable.appendChild(row);
+            });
+
+            // 관리자 여부 체크 후 삭제 버튼 보이기
+            checkAdmin();
+
+            updatePagination(Math.ceil(posts.length / postsPerPage));
+        }
+
+        // 게시물 조회수 증가 함수
+        function incrementView(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.views += 1;
+                savePosts(); // 로컬스토리지에 저장
+            }
+        }
+
+        // 게시물 모달 열기 (조회수 증가 및 댓글 로딩)
+        function openModal(index) {
+            const post = posts[index];
+            currentPostId = index; // 현재 게시물의 ID 저장
+
+            document.getElementById("modalTitle").innerText = post.title;
+            document.getElementById("modalAuthor").innerText = `작성자: ${post.author}`;
+            document.getElementById("modalDate").innerText = `작성일: ${post.date}`;
+            document.getElementById("modalContent").innerText = post.content;
+
+            // 조회수 증가
+            incrementView(post.id);
+
+            // 댓글을 해당 게시물에서 불러오기
+            renderComments(post.id);
+
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        // 댓글 작성 및 표시
+        function submitComment() {
+            const commentText = document.getElementById("commentInput").value.trim();
+            if (!commentText) {
+                alert("댓글을 작성해주세요.");
+                return;
+            }
+
+            const userId = localStorage.getItem("userId");
+            const userEmail = localStorage.getItem("userEmail");
+
+            if (!userId || !userEmail) {
+                alert("로그인 후 댓글을 작성할 수 있습니다.");
+                return;
+            }
+
+            const comment = {
+                userId: userId,
+                userEmail: userEmail,
+                content: commentText,
+                timestamp: Date.now()
+            };
+
+            // 현재 게시물 ID 가져오기
+            const postId = posts[currentPostId].id;
+
+            // 댓글을 게시물 객체에 추가
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.comments.push(comment);
+                savePosts(); // 로컬스토리지에 저장
+                renderComments(postId); // 댓글 갱신
+            }
+
+            // 댓글 입력창 비우기
+            document.getElementById("commentInput").value = '';
+        }
+
+        // 댓글을 게시물 모달에 표시하는 함수
+        function renderComments(postId) {
+            const commentsList = document.getElementById("commentsList");
+            commentsList.innerHTML = ''; // 기존 댓글 삭제
+
+            const post = posts.find(p => p.id === postId); // 현재 게시물 찾기
+
+            if (post && post.comments) {
+                post.comments.forEach((comment, index) => {
+                    const commentElement = document.createElement("div");
+                    commentElement.classList.add("comment-item");
+                    commentElement.innerHTML = `
+                        <p><strong>${comment.userId}</strong></p> <!-- 이메일 대신 ID로 변경 -->
+                        <p>${comment.content}</p>
+                        <p><small>${new Date(comment.timestamp).toLocaleString()}</small></p>
+                    `;
+
+                    // 관리자인 경우 삭제 버튼 보이기
+                    const deleteButton = document.createElement("button");
+                    deleteButton.innerText = "삭제";
+                    deleteButton.classList.add("deleteCommentButton");
+                    deleteButton.style.display = localStorage.getItem("userRole") === "admin" ? "inline-block" : "none";
+                    deleteButton.onclick = () => deleteComment(postId, index);
+
+                    commentElement.appendChild(deleteButton);
+                    commentsList.appendChild(commentElement);
+                });
+            }
+        }
+
+        // 댓글 삭제
+        function deleteComment(postId, commentIndex) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.comments.splice(commentIndex, 1); // 댓글 삭제
+                savePosts(); // 로컬스토리지에 새로 저장
+                renderComments(postId); // 댓글 갱신
+            }
+
+            // Firebase에서 댓글 삭제
+            const commentId = Object.keys(post.comments)[commentIndex]; // 댓글 ID 가져오기
+            const commentRef = ref(database, `posts/${postId}/comments/${commentId}`);
+            remove(commentRef)
+                .then(() => {
+                    console.log("댓글 삭제 성공");
+                })
+                .catch((error) => {
+                    console.error("댓글 삭제 실패:", error);
+                    alert("댓글 삭제에 실패했습니다.");
+                });
+        }
+
+        // 게시물 삭제 확인 모달
+        function confirmDelete(index) {
+            currentPostId = index; // 삭제할 게시물 ID 저장
+            document.getElementById("deleteModal").style.display = "block"; // 삭제 모달 열기
+        }
+
+        // 게시물 삭제
+        function deletePost() {
+            // posts 배열에서 삭제할 게시물 삭제
+            posts.splice(currentPostId, 1);
+            savePosts(); // 로컬스토리지에 새로 저장
+            closeDeleteModal(); // 삭제 모달 닫기
+            renderPosts(); // 게시물 렌더링
+        }
+
+        // 삭제 모달 닫기
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none"; // 모달 닫기
+        }
+
+        // 게시물 모달 닫기
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none"; // 게시물 모달 닫기
+        }
+
+        // 게시물 작성 모달 열기
+        function openPostForm() {
+            document.getElementById("postModal").style.display = "block"; // 게시물 작성 모달 열기
+        }
+
+        // 게시물 작성 모달 닫기
+        function closePostModal() {
+            document.getElementById("postModal").style.display = "none"; // 게시물 작성 모달 닫기
+        }
+
+        // 게시물 작성하기
+        function submitPost() {
+            const category = document.getElementById("category").value;
+            const title = document.getElementById("title").value.trim();
+            const author = document.getElementById("author").value.trim();
+            const content = document.getElementById("content").value.trim();
+            const date = new Date().toISOString().split("T")[0];
+
+            if (!title || !content) {
+                alert("제목과 내용을 입력해주세요.");
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                category,
+                title,
+                author,
+                content,
+                date,
+                views: 0,
+                likes: 0,
+                comments: []  // 댓글 추가
+            };
+
+            posts.push(newPost);
+            savePosts(); // 게시물 저장
+            document.getElementById("postForm").reset();
+            closePostModal(); // 모달 닫기
+            showAllPosts(); // 새로 작성된 게시물 보여주기
+        }
+
+        // 페이지 변경
+        function changePage(direction) {
+            currentPage += direction;
+            renderPosts();
+        }
+
+        // 페이지네이션 업데이트
+        function updatePagination(totalPages) {
+            const pageNumbers = document.getElementById("pageNumbers");
+            pageNumbers.innerHTML = "";
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageNumber = document.createElement("span");
+                pageNumber.innerText = i;
+                pageNumber.className = i === currentPage ? "active" : "";
+                pageNumber.onclick = () => {
+                    currentPage = i;
+                    renderPosts();
+                };
+                pageNumbers.appendChild(pageNumber);
+            }
+
+            document.getElementById("prevPage").style.display = currentPage === 1 ? "none" : "inline";
+            document.getElementById("nextPage").style.display =
+                currentPage === totalPages ? "none" : "inline";
+        }
+
+
+
+
+
+
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = document.querySelectorAll('.item');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // 다른 활성화된 메뉴를 닫기
+                    menuItems.forEach(i => {
+                        if (i !== item) {
+                            i.classList.remove('active');
+                        }
+                    });
+                    // 클릭한 메뉴 활성화/비활성화 토글
+                    item.classList.toggle('active');
+                });
+            });
+
+            // 메뉴 외부 클릭 시 닫기
+            document.addEventListener('click', () => {
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+            });
+        });
+
+        
+
+        
+    </script>
+</body>
+
+</html>

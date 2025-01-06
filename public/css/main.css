@@ -1,0 +1,284 @@
+@font-face {
+    font-family: 'HSSanTokki20-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405@1.0/HSSanTokki20-Regular.woff2') format('woff2');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #AAB3C0, #FFFFFF);
+    font-size: 16px;
+    color: #333;
+}
+
+.horizontal-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+
+.horizontalMenu {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+}
+
+
+.subMenu {
+    background: #FFFFFF;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 220px;
+    max-height: 0;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+    z-index: 10;
+}
+
+
+.subMenu a {
+    display: block;
+    padding: 12px 15px;
+    color: #333;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #e0e0e0;
+    text-decoration: none;
+    /* 밑줄 제거 */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.subMenu a:last-child {
+    border-bottom: none;
+}
+
+.subMenu a:hover {
+    background: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 20px;
+    background: transparent;
+    color: #333;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+
+
+.item.active .subMenu {
+    max-height: 300px;
+    opacity: 1;
+}
+
+
+.item.active .btn {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+
+
+.item {
+    position: relative;
+    text-align: center;
+}
+
+#canvas {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    z-index: -1;
+    background: linear-gradient(to bottom, #007bff 0%, #8200c9 100%);
+}
+
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.button span {
+    margin-right: 8px;
+}
+
+.button i {
+    font-size: 1.2rem;
+    color: #555;
+    background: #e0e0e0;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.button:hover {
+    background: #e0e0e0;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+/* 반응형 너비 설정 */
+@media (max-width: 480px) {
+
+    /* 모바일에서 사용될 스타일 */
+    body {
+        font-size: 14px;
+    }
+
+    .horizontal-wrapper {
+        padding: 10px 0;
+    }
+
+    .horizontalMenu {
+        flex-direction: column;
+    }
+
+    .btn {
+        padding: 10px;
+    }
+
+    .subMenu {
+        width: 100%;
+    }
+}
+
+/* 반응형 너비 설정 */
+@media (max-width: 1024px) {
+
+    /* 태블릿에서 사용될 스타일 */
+    body {
+        font-size: 15px;
+    }
+
+    .horizontalMenu {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+
+/* 데스크탑에서 사용될 스타일 */
+@media (min-width: 1025px) {
+    body {
+        font-size: 16px;
+    }
+
+    .horizontal-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .horizontalMenu {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .btn {
+        padding: 12px 20px;
+    }
+
+    .subMenu {
+        width: 220px;
+    }
+}
+
+
+
+
+
+/* Logo and Text Positioning */
+.logo-container {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    margin: -15px 0px 0px 0px;
+    width: 90px; /* Adjust the size as needed */
+    height: 90px; /* Adjust the size as needed */
+}
+
+.logo-text {
+    margin: -15px 0px 0px 0px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    font-family: 'HSSanTokki20-Regular', sans-serif;
+}

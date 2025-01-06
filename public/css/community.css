@@ -1,0 +1,955 @@
+@font-face {
+    font-family: 'HSSanTokki20-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405@1.0/HSSanTokki20-Regular.woff2') format('woff2');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #3b5998;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1.5em;
+}
+
+.horizontal-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+
+.horizontalMenu {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* 드롭다운 기본 스타일 */
+.subMenu {
+    background: #FFFFFF;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 220px;
+    max-height: 0;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+    z-index: 10;
+}
+
+/* 드롭다운 링크 */
+.subMenu a {
+    display: block;
+    padding: 12px 15px;
+    color: #333;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #e0e0e0;
+    text-decoration: none;
+    /* 밑줄 제거 */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.subMenu a:last-child {
+    border-bottom: none;
+}
+
+.subMenu a:hover {
+    background: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+/* 드롭다운 버튼 스타일 */
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 20px;
+    background: transparent;
+    color: #333;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    /* 밑줄 제거 */
+    cursor: pointer;
+}
+
+.btn i {
+    margin-right: 8px;
+    /* 아이콘과 텍스트 간격 */
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+
+/* 드롭다운 활성화 */
+.item.active .subMenu {
+    max-height: 300px;
+    /* 메뉴가 열릴 때 최대 높이 */
+    opacity: 1;
+}
+
+/* 드롭다운 활성화 상태에서 버튼 스타일 */
+.item.active .btn {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+
+/* 드롭다운 컨테이너 */
+.item {
+    position: relative;
+    text-align: center;
+}
+
+
+.container_kim {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.community-h2_kim {
+    color: #3b5998;
+    text-align: center;
+}
+
+.btn-group_kim {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.btn-group_kim button {
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-group_kim button:hover {
+    background-color: #2d4373;
+}
+
+.search-bar_kim {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-bar_kim input {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    width: 300px;
+}
+
+.search-bar_kim button {
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.search-bar_kim button:hover {
+    background-color: #2d4373;
+}
+
+.table_kim {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #007bff;
+}
+
+.table_kim th,
+table_kim td {
+    padding: 15px;
+    border: 1px solid #ccc;
+}
+
+.table_kim th {
+    background-color: #f0f0f0;
+    color: #3b5998;
+}
+
+.table_kim tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.table_kim .category_kim {
+    color: white;
+    text-align: center;
+    background-color: #3b5998;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.pagination_kim {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination_kim a {
+    text-decoration: none;
+    color: #3b5998;
+    margin: 0 5px;
+    font-size: 1.2em;
+}
+
+.pagination_kim a:hover {
+    color: #2d4373;
+    text-decoration: underline;
+}
+
+/* 모달 배경 스타일 */
+.modal_kim {
+    display: none;
+    /* 기본적으로 모달은 숨김 */
+    position: fixed;
+    z-index: 1000;
+    /* 다른 요소 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* 전체 화면을 덮음 */
+    height: 100%;
+    overflow: auto;
+    /* 필요시 스크롤 가능 */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* 반투명 검정 배경 */
+}
+
+/* 모달 콘텐츠 스타일 */
+.modal-content_kim {
+    background-color: #fff;
+    /* 배경을 흰색으로 설정 */
+    margin: 15% auto;
+    /* 화면 중앙에 위치하도록 설정 */
+    padding: 20px;
+    border: 1px solid #888;
+    /* 테두리 */
+    border-radius: 10px;
+    /* 모서리 둥글게 */
+    width: 80%;
+    /* 너비 설정 */
+    max-width: 500px;
+    /* 최대 너비 설정 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    /* 그림자 효과 */
+}
+
+/* 닫기 버튼 스타일 */
+.close_kim {
+    color: #aaa;
+    /* 회색 */
+    float: right;
+    /* 오른쪽 정렬 */
+    font-size: 28px;
+    /* 글자 크기 */
+    font-weight: bold;
+    /* 굵게 */
+}
+
+.close_kim:hover,
+.close_kim:focus {
+    color: black;
+    /* 마우스 오버 시 색상 변경 */
+    text-decoration: none;
+    /* 텍스트 장식 제거 */
+    cursor: pointer;
+    /* 커서 모양 변경 */
+}
+
+/* 모달 제목 스타일 */
+#modalTitle {
+    font-size: 24px;
+    /* 제목 크기 */
+    margin-bottom: 10px;
+    /* 아래 여백 */
+}
+
+/* 좋아요 버튼 스타일 */
+#likeButton {
+    background-color: #007bff;
+    /* 파란색 배경 */
+    color: white;
+    /* 흰색 글자 */
+    border: none;
+    /* 테두리 없음 */
+    padding: 10px 20px;
+    /* 패딩 */
+    border-radius: 5px;
+    /* 모서리 둥글게 */
+    cursor: pointer;
+    /* 커서 모양 변경 */
+    font-size: 16px;
+    /* 글자 크기 */
+}
+
+#likeButton:hover {
+    background-color: #0056b3;
+    /* 마우스 오버 시 색상 변경 */
+}
+
+/* 좋아요 수 스타일 */
+#likeCount {
+    margin-top: 10px;
+    /* 위 여백 */
+    font-size: 16px;
+    /* 글자 크기 */
+}
+
+
+/* 각 입력 필드 스타일 */
+.input-group_kim {
+    margin-bottom: 15px;
+    /* 아래 여백 */
+}
+
+/* 레이블 스타일 */
+.input-label_kim {
+    margin-bottom: 5px;
+    /* 아래 여백 */
+}
+
+/* 텍스트 입력 스타일 */
+.input-text_kim,
+.textarea_kim,
+.select_kim {
+    padding: 10px;
+    /* 내부 여백 */
+    border: 1px solid #ccc;
+    /* 테두리 */
+    border-radius: 5px;
+    /* 모서리 둥글게 */
+    width: 100%;
+    /* 전체 너비 */
+}
+
+/* 버튼 스타일 */
+.button_kim {
+    background-color: #007bff;
+    /* 배경색 */
+    color: white;
+    /* 글자 색상 */
+    padding: 10px 15px;
+    /* 내부 여백 */
+    border: none;
+    /* 테두리 없음 */
+    border-radius: 5px;
+    /* 모서리 둥글게 */
+    cursor: pointer;
+    /* 커서 모양 변경 */
+    transition: background-color 0.3s;
+    /* 색상 변경 애니메이션 */
+}
+
+.button_kim:hover {
+    background-color: #3b5998;
+    /* 마우스 오버 시 색상 */
+}
+
+/* 밑쪽 기본 틀 */
+.footer {
+    background-color: #2e2e3b;
+    color: #cfcfd6;
+    padding: 20px 0;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 2s ease, transform 2s ease;
+    margin: 400px 0px 0px 0px;
+}
+
+
+.footer.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo .logo-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.footer-logo p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.footer-logo span {
+    font-size: 14px;
+    color: #a0a0a8;
+}
+
+
+.footer-address p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+
+.footer-links a {
+    color: #cfcfd6;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 0 5px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+
+.footer-bottom {
+    text-align: center;
+    padding: 10px 0;
+    font-size: 13px;
+    color: #8f8f99;
+}
+
+/* 배경 설정 */
+body {
+    background: linear-gradient(135deg, #f0f8ff, #d0e8f5);
+    /* 하늘색 그라디언트 */
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 코어 배경 */
+.core-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    perspective: 1200px;
+}
+
+/* 코어 애니메이션 */
+.core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(135, 206, 250, 0.8), transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px rgba(135, 206, 250, 0.6),
+        0 0 70px rgba(70, 130, 180, 0.5),
+        0 0 120px rgba(30, 144, 255, 0.4);
+    animation: spin 10s infinite linear, pulse 4s infinite alternate ease-in-out;
+}
+
+/* 코어 회전 애니메이션 */
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* 코어 맥동 애니메이션 */
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 40px rgba(135, 206, 250, 0.6),
+            0 0 70px rgba(70, 130, 180, 0.5),
+            0 0 120px rgba(30, 144, 255, 0.4);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 60px rgba(135, 206, 250, 0.8),
+            0 0 90px rgba(70, 130, 180, 0.6),
+            0 0 140px rgba(30, 144, 255, 0.5);
+    }
+}
+
+
+
+
+
+
+
+/* 게시글 작성 창 */
+.modal-content_kim {
+    background: linear-gradient(145deg, #ffffff, #e6e9f0);
+    /* 은은한 그라디언트 */
+    padding: 50px 40px;
+    border-radius: 20px;
+    /* 더 부드러운 곡선 */
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 123, 255, 0.15);
+    /* 입체감 강화 */
+    animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 부드러운 애니메이션 */
+    position: relative;
+    backdrop-filter: blur(10px);
+    /* 배경 블러 효과 */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* 얇은 테두리 */
+}
+
+/* 게시글 모달 제목 스타일 */
+#modalTitle {
+    font-size: 30px;
+    /* 더 큰 제목 */
+    font-weight: bold;
+    color: #007bff;
+    /* 고급스러운 블루 */
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    /* 은은한 그림자 */
+}
+
+/* 게시글 내용 스타일 */
+#modalContent {
+    font-size: 17px;
+    /* 약간 더 큰 폰트 */
+    color: #444;
+    /* 부드러운 텍스트 컬러 */
+    line-height: 1.8;
+    /* 읽기 좋은 라인 간격 */
+    margin-bottom: 30px;
+    text-align: justify;
+    /* 내용 정렬 */
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    /* 투명도 추가 */
+}
+
+/* 좋아요 버튼 스타일 */
+#likeButton {
+    background: linear-gradient(145deg, #007bff, #42aaff);
+    /* 부드러운 그라디언트 */
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 50px;
+    /* 완전히 둥근 모양 */
+    font-size: 18px;
+    /* 약간 더 큰 텍스트 */
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 부드러운 효과 */
+    display: inline-block;
+    margin: 20px auto;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.5);
+    /* 부드러운 그림자 */
+}
+
+#likeButton:hover {
+    background: linear-gradient(145deg, #0056b3, #007bff);
+    /* 색상 강조 */
+    box-shadow: 0 12px 30px rgba(0, 123, 255, 0.7);
+    /* 더 강한 그림자 */
+    transform: scale(1.1);
+    /* 약간 확대 */
+}
+
+#likeCount {
+    display: block;
+    font-size: 15px;
+    color: #666;
+    margin-top: 15px;
+    text-align: center;
+    font-style: italic;
+}
+
+/* 닫기 버튼 */
+.close_kim {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    /* 더 큰 크기 */
+    color: #888;
+    /* 부드러운 회색 */
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+    /* 색상과 크기 변화 */
+}
+
+.close_kim:hover {
+    color: #444;
+    /* 진한 회색 */
+    transform: scale(1.2);
+    /* 약간 확대 */
+}
+
+/* 애니메이션 */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 추가 버튼 스타일 */
+.button_kim {
+    background: linear-gradient(135deg, #42aaff, #007bff);
+    /* 고급스러운 그라디언트 */
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    /* 둥근 모서리 */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    /* 입체감 추가 */
+}
+
+.button_kim:hover {
+    background: linear-gradient(135deg, #0056b3, #007bff);
+    /* 색상 강조 */
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.6);
+    /* 더 강한 그림자 */
+    transform: scale(1.05);
+    /* 약간 확대 */
+}
+
+/* 게시글 미리보기 */
+.table_kim tbody tr:hover {
+    background: rgba(0, 123, 255, 0.1);
+    /* 부드러운 파란색 배경 */
+    cursor: pointer;
+    transform: scale(1.03);
+    /* 약간 확대 */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 부드러운 애니메이션 */
+    border-radius: 10px;
+    /* 테두리 둥글게 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* 부드러운 그림자 */
+}
+
+
+
+
+
+
+/* 댓글 리스트 스타일 */
+.comments-section_kim {
+    margin-top: 30px;
+    background-color: #f7f8fc;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease-in-out;
+    animation: fadeIn 0.6s ease-out; /* 댓글 리스트 로딩 애니메이션 */
+}
+
+/* 댓글 항목 스타일 */
+.comment-item {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: slideIn 0.6s ease-out forwards; /* 댓글 등장 애니메이션 */
+}
+
+/* 댓글 항목 호버 애니메이션 */
+.comment-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* 댓글 항목 등장 애니메이션 */
+@keyframes slideIn {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 댓글 작성자 스타일 */
+.comment-item strong {
+    font-size: 1.1rem;
+    color: #3498db;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+/* 댓글 내용 스타일 */
+.comment-item p {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+/* 댓글 타임스탬프 스타일 */
+.comment-item small {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 5px;
+    display: block;
+}
+
+/* 댓글 삭제 버튼 스타일 */
+.deleteCommentButton {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.deleteCommentButton:hover {
+    background-color: #c0392b;
+}
+
+/* 댓글 입력창 스타일 */
+#commentInput {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+#commentInput:focus {
+    border-color: #3498db;
+    background-color: #fff;
+}
+
+/* 댓글 작성 버튼 스타일 */
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* 댓글 리스트 fade-in 애니메이션 */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* 반응형 너비 설정 */
+@media (max-width: 480px) {
+
+    /* 모바일에서 사용될 스타일 */
+    body {
+        font-size: 14px;
+    }
+
+    .horizontal-wrapper {
+        padding: 10px 0;
+    }
+
+    .horizontalMenu {
+        flex-direction: column;
+    }
+
+    .btn {
+        padding: 10px;
+    }
+
+    .subMenu {
+        width: 100%;
+    }
+}
+
+/* 반응형 너비 설정 */
+@media (max-width: 1024px) {
+
+    /* 태블릿에서 사용될 스타일 */
+    body {
+        font-size: 15px;
+    }
+
+    .horizontalMenu {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+
+/* 데스크탑에서 사용될 스타일 */
+@media (min-width: 1025px) {
+    body {
+        font-size: 16px;
+    }
+
+    .horizontal-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .horizontalMenu {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .btn {
+        padding: 12px 20px;
+    }
+
+    .subMenu {
+        width: 220px;
+    }
+}
+
+
+
+
+
+/* Logo and Text Positioning */
+.logo-container {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    margin: -15px 0px 0px 0px;
+    width: 90px; /* Adjust the size as needed */
+    height: 90px; /* Adjust the size as needed */
+}
+
+.logo-text {
+    margin: -15px 0px 0px 0px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    font-family: 'HSSanTokki20-Regular', sans-serif;
+}
