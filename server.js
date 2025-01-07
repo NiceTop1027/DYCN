@@ -3,6 +3,9 @@ const path = require('path');
 const fs = require('fs'); // 파일 시스템 모듈
 const app = express();
 
+// JSON 데이터 처리를 위한 미들웨어 설정
+app.use(express.json()); // JSON 바디 파싱
+
 // public 폴더에서 정적 파일 제공
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -72,7 +75,7 @@ app.get('/community', (req, res) => {
 });
 
 // 게시물 작성 API (POST 요청으로 게시물 추가)
-app.post('/addPost', express.json(), (req, res) => {
+app.post('/addPost', (req, res) => {
     const { category, title, author, content } = req.body;
     const newPost = {
         id: Date.now(),
@@ -90,7 +93,7 @@ app.post('/addPost', express.json(), (req, res) => {
     posts.push(newPost); // 새로운 게시물 추가
     savePosts(posts); // 게시물 저장
 
-    res.status(201).send(newPost); // 새 게시물 반환
+    res.status(201).json(newPost); // 새 게시물 반환 (JSON 응답)
 });
 
 // 게시물 삭제 API (DELETE 요청으로 게시물 삭제)
