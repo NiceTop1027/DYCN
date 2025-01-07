@@ -160,15 +160,14 @@ body {
 }
 
 .box1 {
-    margin: 170px 0px 0px 100px;
+    margin: 170px 0px 0px 250px;
 }
 
 .textbox {
     border: 3px solid transparent;
     background: linear-gradient(white, white) padding-box,
         linear-gradient(135deg, #d4f1f9, #2575fc) border-box;
-    box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
-    width: 300px;
+    width: 80%;
     height: 80px;
     background-color: white;
     border-radius: 50px;
@@ -544,12 +543,12 @@ body {
     transform: translateY(0);
 }
 
+/* 설명 박스를 중앙 정렬 */
 .textboxbig {
     border: 3px solid transparent;
     background: linear-gradient(white, white) padding-box,
         linear-gradient(135deg, #d4f1f9, #2575fc) border-box;
-    box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
-    width: 1038px;
+    width: 80%;
     height: 80px;
     background-color: white;
     border-radius: 50px;
