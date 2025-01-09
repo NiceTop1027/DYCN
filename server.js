@@ -104,7 +104,6 @@ app.post('/addPost', (req, res) => {
         });
 });
 
-// 게시물 삭제 API (DELETE 요청으로 MongoDB에서 게시물 삭제)
 app.delete('/deletePost/:id', (req, res) => {
     const { id } = req.params;
 
@@ -119,6 +118,34 @@ app.delete('/deletePost/:id', (req, res) => {
         .catch(err => {
             console.error("게시물 삭제 실패:", err);
             res.status(500).send("게시물 삭제 실패");
+        });
+});
+
+
+
+
+// 댓글 추가 API (POST 요청으로 MongoDB에 댓글 추가)
+app.post('/addComment/:postId', (req, res) => {
+    const { postId } = req.params;
+    const { comment } = req.body;
+
+    Post.findById(postId)
+        .then(post => {
+            if (!post) {
+                return res.status(404).send({ message: '게시물을 찾을 수 없습니다.' });
+            }
+
+            post.comments.push(comment);
+            post.save()
+                .then(updatedPost => res.status(200).json(updatedPost))
+                .catch(err => {
+                    console.error("댓글 추가 실패:", err);
+                    res.status(500).send("댓글 추가 실패");
+                });
+        })
+        .catch(err => {
+            console.error("게시물 조회 실패:", err);
+            res.status(500).send("게시물 조회 실패");
         });
 });
 
