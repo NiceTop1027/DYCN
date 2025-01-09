@@ -390,3 +390,82 @@ body {
         font-size: 3.5vw;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.popup {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    width: 30%;
+    max-width: 600px;
+    border-radius: 10px;
+    cursor: move;
+    opacity: 1;
+    transition: opacity 0.5s ease, transform 0.5s ease; /* 애니메이션 추가 */
+  }
+  
+  .popup-content {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .popup-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .popup-footer {
+    background-color: #3b568f;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .popupCookieSet, .popupClose {
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .popupCookieSet:hover, .popupClose:hover {
+    text-decoration: underline;
+  }
+  
+  .popupClose {
+    background-color: red;
+    padding: 5px 15px;
+    border-radius: 5px;
+  }
+  
+  .popupClose:hover {
+    background-color: darkred;
+  }
