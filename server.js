@@ -68,11 +68,15 @@ app.get('/academic-pathways', (req, res) => {
     res.render('academic-pathways');
 });
 
-// 커뮤니티 페이지 (게시물 데이터를 MongoDB에서 조회하여 전달)
 app.get('/community', (req, res) => {
     Post.find()  // MongoDB에서 모든 게시물을 조회
         .then(posts => {
-            res.render('community', { posts: posts });  // 게시물 데이터를 ejs로 전달
+            // 각 게시물에 번호를 추가
+            const postsWithNumbers = posts.map((post, index) => {
+                post.number = index + 1; // 번호 추가
+                return post;
+            });
+            res.render('community', { posts: postsWithNumbers });  // 번호가 포함된 게시물 데이터 전달
         })
         .catch(err => {
             console.error("게시물 조회 실패:", err);
@@ -120,8 +124,6 @@ app.delete('/deletePost/:id', (req, res) => {
             res.status(500).send("게시물 삭제 실패");
         });
 });
-
-
 
 
 // 댓글 추가 API (POST 요청으로 MongoDB에 댓글 추가)
