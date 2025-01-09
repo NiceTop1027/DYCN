@@ -1,10 +1,30 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs'); // 파일 시스템 모듈
+const mongoose = require('mongoose');
 const app = express();
 
+// MongoDB 연결 설정
+mongoose.connect('mongodb+srv://edenya:iIXa0qu8s3CTdKiB@cluster.sqzvn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster', { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB 연결 성공'))
+    .catch(err => console.error('MongoDB 연결 실패:', err));
+
+// 게시물 데이터 모델 정의
+const postSchema = new mongoose.Schema({
+    category: { type: String, required: true },
+    title: { type: String, required: true },
+    author: { type: String, required: true },
+    content: { type: String, required: true },
+    date: { type: String, required: true },
+    views: { type: Number, default: 0 },
+    likes: { type: Number, default: 0 },
+    comments: [{ type: String }]  // 댓글은 배열로 저장
+});
+
+const Post = mongoose.model('Post', postSchema);
+
 // JSON 데이터 처리를 위한 미들웨어 설정
-app.use(express.json()); // JSON 바디 파싱
+app.use(express.json());  // 클라이언트에서 JSON 데이터를 받을 수 있도록 설정
+app.use(express.urlencoded({ extended: true }));  // URL 인코딩된 데이터 처리
 
 // public 폴더에서 정적 파일 제공
 app.use(express.static(path.join(__dirname, 'public')));
@@ -12,24 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // EJS 템플릿 엔진 설정
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-// 게시물 데이터를 JSON 파일로 관리
-const postsFilePath = path.join(__dirname, 'posts.json');
-
-// 게시물을 로드하는 함수
-function loadPosts() {
-    if (fs.existsSync(postsFilePath)) {
-        const data = fs.readFileSync(postsFilePath, 'utf8');
-        return JSON.parse(data);
-    } else {
-        return []; // 파일이 없으면 빈 배열 반환
-    }
-}
-
-// 게시물을 저장하는 함수
-function savePosts(posts) {
-    fs.writeFileSync(postsFilePath, JSON.stringify(posts, null, 2), 'utf8');
-}
 
 // 기본 경로에서 /main으로 리디렉션
 app.get('/', (req, res) => {
@@ -66,48 +68,62 @@ app.get('/academic-pathways', (req, res) => {
     res.render('academic-pathways');
 });
 
-// 커뮤니티 페이지 (게시물 데이터를 동적으로 전달)
+// 커뮤니티 페이지 (게시물 데이터를 MongoDB에서 조회하여 전달)
 app.get('/community', (req, res) => {
-    const posts = loadPosts(); // 게시물 데이터 로드
-    res.render('community', {
-        posts: posts
-    });
+    Post.find()  // MongoDB에서 모든 게시물을 조회
+        .then(posts => {
+            res.render('community', { posts: posts });  // 게시물 데이터를 ejs로 전달
+        })
+        .catch(err => {
+            console.error("게시물 조회 실패:", err);
+            res.status(500).send("게시물 조회 실패");
+        });
 });
 
-// 게시물 작성 API (POST 요청으로 게시물 추가)
+// 게시물 작성 API (POST 요청으로 MongoDB에 게시물 추가)
 app.post('/addPost', (req, res) => {
     const { category, title, author, content } = req.body;
-    const newPost = {
-        id: Date.now(),
+    const newPost = new Post({
         category,
         title,
         author,
         content,
-        date: new Date().toISOString().split("T")[0],
+        date: new Date().toISOString().split("T")[0], // 현재 날짜
         views: 0,
         likes: 0,
         comments: []
-    };
+    });
 
-    const posts = loadPosts(); // 게시물 로드
-    posts.push(newPost); // 새로운 게시물 추가
-    savePosts(posts); // 게시물 저장
-
-    res.status(201).json(newPost); // 새 게시물 반환 (JSON 응답)
+    newPost.save()
+        .then(post => {
+            res.status(201).json(post);  // 새 게시물 반환 (JSON 응답)
+        })
+        .catch(err => {
+            console.error("게시물 작성 실패:", err);
+            res.status(500).send("게시물 작성 실패");
+        });
 });
 
-// 게시물 삭제 API (DELETE 요청으로 게시물 삭제)
+// 게시물 삭제 API (DELETE 요청으로 MongoDB에서 게시물 삭제)
 app.delete('/deletePost/:id', (req, res) => {
     const { id } = req.params;
-    let posts = loadPosts();
-    posts = posts.filter(post => post.id !== parseInt(id)); // 해당 ID의 게시물 삭제
-    savePosts(posts); // 게시물 저장
 
-    res.status(200).send({ message: '게시물이 삭제되었습니다.' });
+    Post.findByIdAndDelete(id)
+        .then(result => {
+            if (result) {
+                res.status(200).send({ message: '게시물이 삭제되었습니다.' });
+            } else {
+                res.status(404).send({ message: '게시물을 찾을 수 없습니다.' });
+            }
+        })
+        .catch(err => {
+            console.error("게시물 삭제 실패:", err);
+            res.status(500).send("게시물 삭제 실패");
+        });
 });
 
 // 서버 실행
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // 환경 변수 또는 기본 포트 3000 사용
 app.listen(PORT, () => {
     console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
 });
