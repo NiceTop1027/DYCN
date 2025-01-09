@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" href="https://i.ibb.co/LR54XD7/DYCNFALOGO-1.png" type="image/png">
-    <meta property="og:title" content="DYCNㅣ커뮤니티" />
-    <meta property="og:description" content="덕영고등학교 DYCN 팀에서 운영하는 메인 페이지 입니다." />
-    <meta property="og:image" content="https://i.ibb.co/fnhtkjy/DYCN.png" />
-    <meta property="og:type" content="website" />
 </head>
 
 <body>
@@ -25,6 +21,18 @@
             </ul>
     </div>
 
+    <div id="popup" class="popup" onmousedown="startDrag(event)">
+        <div class="popup-content">
+            <img src="https://i.ibb.co/n6wDD7s/zol.jpg" alt="축하 이미지" class="popup-image">
+          </a>
+        </div>
+    
+        <div class="popup-footer">
+          <p style="color: white; margin: 4px 0px 0px 70px; font-family: 'HSSanTokki20-Regular'; font-size: 20px;"><span style="color: gold; font-family: 'HSSanTokki20-Regular';">3학년</span> 선배님들 <span style="color: gold; font-family: 'HSSanTokki20-Regular';">졸업</span>을 진심으로 축하드립니다!!</p>
+          <a href="javascript:" class="popupClose" onclick="closePopup()">닫기</a>
+        </div>
+      </div>
+
     <div id="canvas">
         <div class="center-text">
             <p>DYCN 홈페이지에 오신것을 환영합니다.</p>
@@ -36,12 +44,97 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
+    <script>
 
 
 
 
 
 
+        // 팝업을 닫고, 1일 동안 열지 않도록 쿠키를 설정
+        function closePopup() {
+        const popup = document.getElementById('popup');
+        popup.style.opacity = '0';  // 투명도 변경
+        popup.style.transform = 'translateY(100px)';  // 아래로 이동하여 닫히는 애니메이션
+
+        // 애니메이션이 끝난 후 팝업을 완전히 숨김
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 500); // 애니메이션 시간이 끝날 때까지 기다림
+        }
+
+        // 쿠키를 설정하여 1일 동안 팝업을 숨김
+        function closeForOneDay() {
+        const date = new Date();
+        date.setDate(date.getDate() + 1); // 쿠키 만료 시간을 1일 후로 설정
+        document.cookie = "popupClosed=true; expires=" + date.toUTCString() + "; path=/";  // 쿠키 설정
+        
+        closePopup(); // 팝업을 닫음
+        }
+
+        // 페이지 로드 시 쿠키를 확인하여 팝업을 숨김
+        window.onload = function() {
+        const cookies = document.cookie.split(';');
+        let popupClosed = false;
+
+        // 쿠키에서 popupClosed 값을 찾음
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith("popupClosed=")) {
+            popupClosed = true;  // 쿠키가 있으면 true로 설정
+            break;
+            }
+        }
+
+        // 쿠키가 "popupClosed=true"이면 팝업을 숨기고, 아니면 팝업을 표시
+        if (popupClosed) {
+            document.getElementById('popup').style.display = 'none';
+        } else {
+            document.getElementById('popup').style.display = 'flex';  // 팝업을 보이게 설정
+        }
+        }
+
+        // 드래그 시작 시 처리
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        function startDrag(event) {
+        isDragging = true;
+        offsetX = event.clientX - document.getElementById('popup').getBoundingClientRect().left;
+        offsetY = event.clientY - document.getElementById('popup').getBoundingClientRect().top;
+
+        // 마우스 이동에 따른 드래그 수행
+        document.addEventListener('mousemove', dragPopup);
+        document.addEventListener('mouseup', stopDrag);
+        }
+
+        // 드래그 중일 때, 마우스 이동에 따라 팝업 이동
+        function dragPopup(event) {
+        if (isDragging) {
+            const popup = document.getElementById('popup');
+            popup.style.left = `${event.clientX - offsetX}px`;
+            popup.style.top = `${event.clientY - offsetY}px`;
+        }
+        }
+
+        // 드래그가 끝나면 처리
+        function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', dragPopup);
+        document.removeEventListener('mouseup', stopDrag);
+        }
+
+
+
+
+
+
+
+
+
+        
+
+    </script>
 
     <script>
         var renderer, scene, camera, circle, skelet, particle;
@@ -279,6 +372,7 @@
                 });
             });
         });
+
     </script>
 </body>
 
