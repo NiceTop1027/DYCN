@@ -29,8 +29,8 @@
             <img src="https://i.ibb.co/fnhtkjy/DYCN.png" alt="DYCN 로고" class="logo">
         </div>
         <ul class="horizontalMenu" id="navBar"></ul>
-        </ul>
     </div>
+
     <div class="container_kim">
         <h2 class="community-h2_kim">DYCN Community</h2>
         <div class="btn-group_kim">
@@ -42,6 +42,7 @@
         <table class="table_kim">
             <thead>
                 <tr>
+                    <th>번호</th>
                     <th>말머리</th>
                     <th>제목</th>
                     <th>작성자</th>
@@ -52,24 +53,27 @@
             </thead>
             <tbody id="postTable">
                 <% if (posts.length > 0) { %>
-                    <% posts.forEach(post => { %>
+                    <% posts.forEach((post, index) => { %>
                         <tr>
+                            <td><%= index + 1 %></td>
                             <td><%= post.category %></td>
-                            <td><a href="#" onclick="openModal('<%= post.id %>')"><%= post.title %></a></td>
+                            <td>
+                                <a href="#" onclick="openModal('<%- post._id.toString() %>')"><%= post.title %></a>
+                            </td>
                             <td><%= post.author %></td>
                             <td><%= post.date %></td>
                             <td><%= post.views %></td>
                             <td>
-                                <button class="deleteButton" onclick="confirmDelete('<%= post.id %>')" style="display:none;">삭제</button>
-                            </td>
+                                <button class="deleteButton" onclick="confirmDelete('<%- post._id.toString() %>')" style="display:none;">삭제</button>
+                            </td>                             
                         </tr>
                     <% }) %>
                 <% } else { %>
                     <tr>
-                        <td colspan="6">게시물이 없습니다.</td>
+                        <td colspan="7">게시물이 없습니다.</td>
                     </tr>
                 <% } %>
-            </tbody>                             
+            </tbody>                           
         </table>
         <div class="pagination_kim">
             <a href="#" id="prevPage" onclick="changePage(-1)">&lt;</a>
@@ -78,6 +82,7 @@
         </div>
     </div>
 
+    <!-- Delete Modal -->
     <div id="deleteModal" class="modal_kim">
         <div class="modal-content_kim">
             <span class="close_kim" onclick="closeDeleteModal()">&times;</span>
@@ -87,6 +92,7 @@
         </div>
     </div>
 
+    <!-- View Modal -->
     <div id="myModal" class="modal_kim">
         <div class="modal-content_kim">
             <span class="close_kim" onclick="closeModal()">&times;</span>
@@ -94,19 +100,17 @@
             <p id="modalAuthor"></p>
             <p id="modalDate"></p>
             <p id="modalContent"></p>
-    
             <!-- 댓글 입력 UI -->
             <div class="comments-section_kim">
                 <h4>댓글</h4>
                 <textarea id="commentInput" class="textarea_kim" placeholder="댓글을 작성하세요..." rows="4"></textarea>
                 <button onclick="submitComment()" class="button_kim">댓글 작성</button>
-    
                 <div id="commentsList"></div> <!-- 댓글 리스트 표시 -->
             </div>
         </div>
     </div>
 
-
+    <!-- Post Modal -->
     <div id="postModal" class="modal_kim">
         <div class="modal-content_kim">
             <span class="close_kim" onclick="closePostModal()">&times;</span>
@@ -136,6 +140,7 @@
         </div>
     </div>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-logo">
@@ -144,7 +149,7 @@
             </div>
             <div class="footer-address">
                 <p>경기도 용인시 처인구 고림로74번길 15 (덕영고등학교)</p>
-                <p>Tel. 010-4795-3077 (예비 전화번호) | Mail. mistarcodm@gmail.com </p>
+                <p>Tel. 010-4795-3077 | Mail. mistarcodm@gmail.com </p>
             </div>
             <div class="footer-links">
                 <a href="https://dukyoung-h.goeyi.kr/dukyoung-h/main.do">덕영고등학교 홈페이지</a> |
@@ -350,15 +355,21 @@
             fetch('/community')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.length === 0) {
-                        console.log("서버에서 받은 게시물 데이터가 없습니다.");
-                    } else {
-                        posts = data; // 받은 데이터를 posts 배열에 저장
-                        showAllPosts(); // 게시물 보여주기
-                    }
+                    // 게시물을 최신순으로 정렬 (내림차순)
+                    posts = data.sort((a, b) => new Date(b.date) - new Date(a.date)); // `date` 필드를 기준으로 정렬
+
+                    // 번호를 매기기 위해 데이터를 번호와 함께 추가
+                    posts = posts.map((post, index) => {
+                        post.number = index + 1; // 번호는 1부터 시작
+                        return post;
+                    });
+
+                    showAllPosts(); // 게시물 보여주기
                 })
                 .catch(error => console.error("게시물 로딩 실패:", error));
         }
+
+
 
         // 관리자만 삭제 버튼 보이기
         function checkAdmin() {
@@ -379,6 +390,14 @@
             renderPosts();
         }
 
+        function searchPosts() {
+            const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+            const filteredPosts = posts.filter(post => 
+                post.title.toLowerCase().includes(searchQuery)
+            );
+            renderFilteredPosts(filteredPosts);
+        }
+
         // 게시물 렌더링
         function renderPosts() {
             const postTable = document.getElementById("postTable");
@@ -391,16 +410,16 @@
             currentPosts.forEach((post) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
+                    <td>NO <index></td>
                     <td>${post.category}</td>
                     <td>
-                        <!-- 제목 클릭 시 해당 게시물의 상세 정보를 모달로 열기 -->
-                        <a href="#" onclick="openModal(${post._id})">${post.title}</a>
+                        <a href="#" onclick="openModal('${post._id.toString()}')">${post.title}</a>
                     </td>
                     <td>${post.author}</td>
                     <td>${post.date}</td>
                     <td>${post.views}</td>
                     <td>
-                        <button class="deleteButton" onclick="confirmDelete(${post._id})" style="display:none;">삭제</button>
+                        <button class="deleteButton" onclick="confirmDelete('${post._id.toString()}')" style="display:none;">삭제</button>
                     </td>
                 `;
                 postTable.appendChild(row);
@@ -409,10 +428,14 @@
             updatePagination(Math.ceil(posts.length / postsPerPage));  // 페이지네이션 업데이트
         }
 
-
+        // 게시물 상세보기 모달 열기
         function openModal(postId) {
-            // 해당 ID의 게시물 찾기
-            const post = posts.find(p => p._id === postId);
+            console.log('postId:', postId); // ID 값이 제대로 전달되는지 확인
+
+            // MongoDB에서의 _id는 ObjectId 타입이기 때문에 문자열로 비교해야 합니다.
+            const post = posts.find(p => p._id.toString() === postId); 
+            console.log('post:', post); // 해당 ID의 게시물이 잘 찾았는지 확인
+
             if (!post) {
                 console.error(`게시물 ID ${postId}을(를) 찾을 수 없습니다.`);
                 return;
@@ -436,7 +459,7 @@
             const commentsList = document.getElementById("commentsList");
             commentsList.innerHTML = ''; // 기존 댓글 초기화
 
-            const post = posts.find(p => p._id === postId);
+            const post = posts.find(p => p._id.toString() === postId);
             if (post && post.comments) {
                 post.comments.forEach((comment) => {
                     const commentElement = document.createElement("div");
@@ -450,6 +473,7 @@
                 });
             }
         }
+
 
         // 모달 닫기
         function closeModal() {
@@ -595,7 +619,6 @@
                 alert("게시물 작성은 관리자만 가능합니다.");
             }
         }
-
     </script>
 
     
