@@ -68,6 +68,15 @@ app.get('/academic-pathways', (req, res) => {
     res.render('academic-pathways');
 });
 
+// 마이페이지 (로그인하지 않은 경우 로그인 페이지로 리디렉션)
+app.get('/mypage', (req, res) => {
+    const user = req.session.user; // 세션에서 로그인된 사용자 확인
+    if (!user) {
+        return res.redirect('/login'); // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+    }
+    res.render('mypage', { user });
+});
+
 app.get('/community', (req, res) => {
     Post.find()  // MongoDB에서 모든 게시물을 조회
         .then(posts => {
@@ -124,7 +133,6 @@ app.delete('/deletePost/:id', (req, res) => {
             res.status(500).send("게시물 삭제 실패");
         });
 });
-
 
 // 댓글 추가 API (POST 요청으로 MongoDB에 댓글 추가)
 app.post('/addComment/:postId', (req, res) => {
