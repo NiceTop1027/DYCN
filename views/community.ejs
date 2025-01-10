@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="css/community.css">
     <link rel="icon" href="https://i.ibb.co/LR54XD7/DYCNFALOGO-1.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism-tomorrow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-html.min.js"></script>
+    
 
     <meta property="og:title" content="DYCNㅣ커뮤니티" />
     <meta property="og:description" content="덕영고등학교 DYCN 팀에서 운영하는 커뮤니티 입니다." />
@@ -47,7 +53,6 @@
                     <th>제목</th>
                     <th>작성자</th>
                     <th>작성일</th>
-                    <th>조회수</th>
                     <th>삭제</th>
                 </tr>
             </thead>
@@ -58,14 +63,19 @@
                             <td><%= index + 1 %></td>
                             <td><%= post.category %></td>
                             <td>
-                                <a href="#" onclick="openModal('<%- post._id.toString() %>')"><%= post.title %></a>
+                                <a href="#" onclick="toggleDescription('<%- post._id.toString() %>', this)"><%= post.title %></a>
                             </td>
                             <td><%= post.author %></td>
                             <td><%= post.date %></td>
-                            <td><%= post.views %></td>
                             <td>
                                 <button class="deleteButton" onclick="confirmDelete('<%- post._id.toString() %>')" style="display:none;">삭제</button>
-                            </td>                             
+                            </td>
+                        </tr>
+                        <!-- 설명 부분 (처음에는 숨김 처리) -->
+                        <tr id="description-<%- post._id.toString() %>" style="display: none;">
+                            <td colspan="7" class="description-cell">
+                                <p><%= post.content %></p>
+                            </td>
                         </tr>
                     <% }) %>
                 <% } else { %>
@@ -73,7 +83,7 @@
                         <td colspan="7">게시물이 없습니다.</td>
                     </tr>
                 <% } %>
-            </tbody>                           
+            </tbody>                       
         </table>
         <div class="pagination_kim">
             <a href="#" id="prevPage" onclick="changePage(-1)">&lt;</a>
@@ -135,6 +145,7 @@
                     <label class="input-label_kim" for="content">내용:</label>
                     <textarea id="content" name="content" class="textarea_kim" rows="4" required></textarea>
                 </div>
+        
                 <button type="button" class="button_kim" onclick="submitPost()">작성</button>
             </form>
         </div>
@@ -417,7 +428,6 @@
                     </td>
                     <td>${post.author}</td>
                     <td>${post.date}</td>
-                    <td>${post.views}</td>
                     <td>
                         <button class="deleteButton" onclick="confirmDelete('${post._id.toString()}')" style="display:none;">삭제</button>
                     </td>
@@ -428,30 +438,54 @@
             updatePagination(Math.ceil(posts.length / postsPerPage));  // 페이지네이션 업데이트
         }
 
-        // 게시물 상세보기 모달 열기
+        // 게시물 제목 클릭 시 조회수 증가 요청 보내기
         function openModal(postId) {
-            console.log('postId:', postId); // ID 값이 제대로 전달되는지 확인
+            const userId = localStorage.getItem("userId");  // 로컬 스토리지에서 사용자 ID를 가져옵니다.
 
-            // MongoDB에서의 _id는 ObjectId 타입이기 때문에 문자열로 비교해야 합니다.
-            const post = posts.find(p => p._id.toString() === postId); 
-            console.log('post:', post); // 해당 ID의 게시물이 잘 찾았는지 확인
-
-            if (!post) {
-                console.error(`게시물 ID ${postId}을(를) 찾을 수 없습니다.`);
+            if (!userId) {
+                alert("로그인이 필요합니다.");
                 return;
             }
 
-            // 모달에 게시물 정보 채우기
-            document.getElementById("modalTitle").innerText = post.title;
-            document.getElementById("modalAuthor").innerText = `작성자: ${post.author}`;
-            document.getElementById("modalDate").innerText = `작성일: ${post.date}`;
-            document.getElementById("modalContent").innerText = post.content;
+            // 조회수 증가 요청 보내기
+            fetch(`/incrementView/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("조회수 증가:", data);
+                // 게시물 상세보기 모달 열기
+                const post = posts.find(p => p._id.toString() === postId);
+                document.getElementById("modalTitle").innerText = post.title;
+                document.getElementById("modalAuthor").innerText = `작성자: ${post.author}`;
+                document.getElementById("modalDate").innerText = `작성일: ${post.date}`;
+                document.getElementById("modalContent").innerText = post.content;
 
-            // 댓글 목록 업데이트
-            renderComments(postId);
+                renderComments(postId);  // 댓글 렌더링
+                document.getElementById("myModal").style.display = "block";  // 모달 열기
+            })
+            .catch(error => {
+                console.error("조회수 증가 실패:", error);
+            });
+        }
 
-            // 모달 열기
-            document.getElementById("myModal").style.display = "block";
+        // 설명 토글 함수
+        function toggleDescription(postId, element) {
+            const descriptionRow = document.getElementById(`description-${postId}`);
+
+            // 설명이 보이지 않으면 보이도록, 보이면 숨기도록 처리
+            if (descriptionRow.style.display === "none" || descriptionRow.style.display === "") {
+                descriptionRow.style.display = "table-row";  // 설명을 보이게
+            } else {
+                descriptionRow.style.display = "none";  // 설명을 숨기게
+            }
+
+            // 추가적인 스타일이나 애니메이션 효과를 원할 경우 여기서 처리 가능합니다
+            // 예를 들어, 다른 설명이 보일 때 이전 설명을 숨기고 싶다면, 추가적으로 로직을 작성할 수 있습니다
         }
 
         // 댓글 표시 함수
