@@ -2,6 +2,10 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
+const bodyParser = require('body-parser');
+const { exec } = require('child_process');
+const fs = require('fs');
+
 
 // MongoDB 연결 설정
 mongoose.connect('mongodb+srv://edenya:iIXa0qu8s3CTdKiB@cluster.sqzvn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -66,6 +70,16 @@ app.get('/signup', (req, res) => {
 // 학문적 경로 페이지
 app.get('/academic-pathways', (req, res) => {
     res.render('academic-pathways');
+});
+
+// C 페이지
+app.get('/c', (req, res) => {
+    res.render('c');
+});
+
+// 파이썬썬 페이지
+app.get('/python', (req, res) => {
+    res.render('python');
 });
 
 // 마이페이지 (로그인하지 않은 경우 로그인 페이지로 리디렉션)
@@ -158,6 +172,41 @@ app.post('/addComment/:postId', (req, res) => {
             res.status(500).send("게시물 조회 실패");
         });
 });
+
+
+// C 코드 실행 엔드포인트
+app.post('/run-c-code', (req, res) => {
+    const cCode = req.body.code;
+
+    // 파일로 저장 (절대 경로 사용)
+    const filePath = path.join(__dirname, 'temp.c');
+    fs.writeFileSync(filePath, cCode);
+
+    // 경로를 따옴표로 감싸서 실행
+    const outputFilePath = path.join(__dirname, 'temp.out');
+    const compileCommand = `gcc "${filePath}" -o "${outputFilePath}"`;
+
+    // 컴파일 명령어 실행
+    exec(compileCommand, (compileErr, compileStdout, compileStderr) => {
+        if (compileErr) {
+            return res.status(400).send(`컴파일 에러: ${compileStderr}`);
+        }
+
+        // 실행 명령어
+        const runCommand = `"${outputFilePath}"`;
+
+        // 실행 명령어 실행
+        exec(runCommand, (runErr, runStdout, runStderr) => {
+            if (runErr) {
+                return res.status(400).send(`실행 에러: ${runStderr}`);
+            }
+
+            // 실행 결과 반환
+            res.send(runStdout);
+        });
+    });
+});
+
 
 // 서버 실행
 const PORT = process.env.PORT || 3000; // 환경 변수 또는 기본 포트 3000 사용
