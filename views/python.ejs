@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 코드 실행기</title>
+    <!-- CodeMirror 라이브러리 로드 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/theme/dracula.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <link rel="icon" href="https://i.ibb.co/LR54XD7/DYCNFALOGO-1.png" type="image/png">
+
+
+    <meta property="og:title" content="DYCNㅣ커뮤니티" />
+    <meta property="og:description" content="덕영고등학교 DYCN 팀에서 운영하는 파이썬 프로그래밍 사이트 입니다." />
+    <meta property="og:image" content="https://i.ibb.co/fnhtkjy/DYCN.png" />
+    <meta property="og:type" content="website" />
+
+    <style>
+
+                /* 기본 스타일 */
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #1e1e1e;
+            color: white;
+        }
+
+        /* 메뉴 창 스타일 */
+        .menu {
+            width: 240px;
+            background-color: #2d2d2d;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .menu-header {
+            background-color: #333;
+            padding: 16px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menu-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-content ul li {
+            border-bottom: 1px solid #444;
+        }
+
+        .menu-content ul li a {
+            display: block;
+            padding: 14px;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu-content ul li a:hover {
+            background-color: #444;
+            color: #fff;
+        }
+
+        /* 메인 콘텐츠 영역 */
+        .main-content {
+            margin-left: 240px; /* 메뉴보다 더 오른쪽으로 */
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 20px;
+        }
+
+        /* 상단 바 */
+        .header-bar {
+            background: linear-gradient(135deg, #1e1e1e, #333333);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-bar button {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .header-bar button:hover {
+            background-color: #3f51b5;
+        }
+
+        /* 코드 입력 영역 */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .editor-container textarea {
+            width: 100%;
+            height: 400px;
+            padding: 12px;
+            background-color: #2d2d2d;
+            color: white;
+            border-radius: 8px;
+            border: 1px solid #444;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .editor-container button {
+            padding: 14px;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+        }
+
+        .editor-container button:hover {
+            background-color: #3f51b5;
+        }
+
+        /* 터미널 스타일 */
+        .terminal {
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #333333;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #dcdcdc;
+            white-space: pre-wrap;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            max-height: 300px; /* 터미널의 최대 높이를 설정 */
+            overflow-y: auto; /* 스크롤 가능하게 설정 */
+        }
+
+        .terminal h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* 화면 크기가 작은 경우 (응답형) */
+        @media (max-width: 768px) {
+            .menu {
+                width: 100%; /* 메뉴를 전체 화면 크기까지 확장 */
+                position: relative; /* 고정된 위치에서 상대 위치로 */
+            }
+
+            .menu-header {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px;
+            }
+
+            .menu-content ul {
+                display: block; /* 리스트가 세로로 정렬되게 */
+            }
+
+            .menu-content ul li {
+                border: none; /* 구분선 제거 */
+            }
+
+            .menu-content ul li a {
+                padding: 10px;
+                font-size: 14px; /* 작은 화면에 맞춰 폰트 크기 줄임 */
+            }
+
+            .header-bar {
+                font-size: 20px;
+            }
+
+            /* 메인 콘텐츠 */
+            .main-content {
+                margin-left: 0; /* 메뉴 창이 풀 화면 크기로 확장되면 왼쪽 여백 없애기 */
+                padding: 10px;
+            }
+
+            .editor-container textarea {
+                height: 300px;
+            }
+
+            .terminal {
+                margin-left: 0;
+                padding: 10px;
+                max-height: 200px; /* 작은 화면에서는 터미널 크기 줄이기 */
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 메뉴 창 -->
+    <div class="menu">
+        <div class="menu-header">
+            <h1>메뉴</h1>
+        </div>
+        <div class="menu-content">
+            <ul>
+                <li><a href="/lntroduction">개발자</a></li>
+                <li><a href="https://dukyoung-h.goeyi.kr/dukyoung-h/main.do">덕영고등학교</a></li>
+                <li><a href="/main">DYCN 사이트</a></li>
+                <li><a href="/c">C 사이트</a></li>
+                <li><a href="/python">Python 사이트</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>Python 코드 실행기</h1>
+            <button onclick="saveCode()">저장</button>
+            <button onclick="downloadFile()">파일로 저장</button>
+        </div>
+
+        <div class="editor-container">
+            <textarea id="python-code" placeholder="여기에 Python 코드를 입력하세요..."></textarea>
+            <button onclick="runPythonCode()">코드 실행</button>
+        </div>
+
+        <div class="terminal">
+            <h2>터미널</h2>
+            <pre id="terminal-output">여기에 실행 결과가 나타납니다...</pre>
+        </div>
+
+        <!-- 저장 완료 및 파일 저장 메시지 -->
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // 코드 저장 기능
+        function saveCode() {
+            const code = editor.getValue();
+            localStorage.setItem('pythonCode', code);
+            displayMessage("저장되었습니다!", "success"); // 저장 메시지 표시
+        }
+
+        // 코드 불러오기 기능
+        function loadCode() {
+            const savedCode = localStorage.getItem('pythonCode');
+            if (savedCode) {
+                editor.setValue(savedCode);
+            }
+        }
+
+        // Pyodide 초기화
+        async function loadPyodideAndPackages() {
+            window.pyodide = await loadPyodide();
+        }
+        loadPyodideAndPackages(); // Pyodide 초기화
+
+        function initializeEditor() {
+            window.editor = CodeMirror.fromTextArea(document.getElementById('python-code'), {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                indentUnit: 4,
+                indentWithTabs: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                autoCloseTags: true
+            });
+            loadCode(); // 페이지 로드 시 저장된 코드 불러오기
+        }
+
+        async function runPythonCode() {
+            const code = editor.getValue();
+            try {
+                let output;
+                pyodide.runPython(`
+                    import sys
+                    import io
+
+                    output = io.StringIO()
+                    sys.stdout = output
+                `);
+                await pyodide.runPythonAsync(code);
+                output = pyodide.runPython('output.getvalue()');
+                document.getElementById('terminal-output').innerText = output !== "" ? output : "터미널에 결과를 표시합니다.";
+            } catch (err) {
+                document.getElementById('terminal-output').innerText = "터미널에서 에러: " + err;
+            }
+        }
+
+        // 파일로 저장 기능
+        function downloadFile() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/python' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'code.py'; // 파일명 설정
+            link.click();
+            displayMessage("파일로 저장되었습니다!", "success"); // 파일 저장 메시지 표시
+        }
+
+        // 메시지 표시 함수
+        function displayMessage(message, type) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.className = 'message ' + type;
+            setTimeout(() => {
+                messageElement.textContent = '';
+            }, 3000); // 3초 후 메시지 제거
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeEditor();
+        });
+    </script>
+</body>
+
+</html>
