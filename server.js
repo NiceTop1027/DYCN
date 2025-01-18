@@ -47,6 +47,12 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
+//에러 페이지
+app.get('/error', (req, res) => {
+    res.render('error');
+});
+
+
 // 이용약관 페이지
 app.get('/TermsofUse', (req, res) => {
     res.render('TermsofUse');
